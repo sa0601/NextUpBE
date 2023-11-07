@@ -22,7 +22,7 @@ from upnext.views import MediaViewSet
 # create a new router
 router = routers.DefaultRouter()
 # register our viewsets
-router.register(r'media', MediaViewSet) #register "/todos" routes
+router.register(r'media', MediaViewSet, basename='media')
 
 
 urlpatterns = [
