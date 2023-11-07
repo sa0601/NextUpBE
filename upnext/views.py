@@ -1,13 +1,19 @@
-from .models import Media
 from rest_framework import viewsets
 from rest_framework import permissions
+from .models import Media
 from .serializers import MediaSerializer
 
-
 class MediaViewSet(viewsets.ModelViewSet):
-    ## The Main Query for the index route
-    queryset = Media.objects.all()
-    # The serializer class for serializing output
     serializer_class = MediaSerializer
-    # optional permission class set permission level
-    permission_classes = [permissions.AllowAny] #Coule be [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # Could be [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Optionally filters the media by the 'tag' parameter in the query string.
+        For example, /media/?tag=movie will filter media with the 'movie' tag.
+        """
+        queryset = Media.objects.all()
+        tag = self.request.query_params.get('tag', None)
+        if tag is not None:
+            queryset = queryset.filter(tag__iexact=tag)
+        return queryset
